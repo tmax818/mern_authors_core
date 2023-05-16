@@ -1,0 +1,28 @@
+{
+  "name": "mern_authors_core",
+  "version": "1.0.0",
+  "description": "```bash\r mkdir -p server/config server/controllers server/models server/routes\r touch server/config/mongoose.config.js server/controllers/author.controller.js server/models/auther.model.js server/routes/author.routes.js server.js .env\r npm init -y\r npm i cors dotenv express mongoose nodemon\r ```\r ## create `client`:",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tmax818/mern_authors_core.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tmax818/mern_authors_core/issues"
+  },
+  "homepage": "https://github.com/tmax818/mern_authors_core#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "mongoose": "^7.1.1",
+    "nodemon": "^2.0.22"
+  }
+}
