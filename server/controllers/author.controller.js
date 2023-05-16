@@ -7,10 +7,9 @@ module.exports.index = (req, res) => {
 }
 // The method below is new
 module.exports.createAuthor = (req, res) => {
-    const { firstName, lastName } = req.body;
+    const { name } = req.body;
     Author.create({
-        firstName,
-        lastName
+        name
     })
         .then(author => res.json(author))
         .catch(err => res.json(err));

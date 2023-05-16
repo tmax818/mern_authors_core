@@ -4,7 +4,7 @@
 ## solution branch
 
 
-## create `server`:
+# create `server`:
 
 ```bash
 mkdir -p server/config server/controllers server/models server/routes
@@ -128,9 +128,159 @@ module.exports = function(app){
 }
 
 ```
-## create `client`:
+# create `client`:
 
 ```bash
 npx create-react-app client
+cd client
+```
+
+## install dependencies
+
+```bash
+npm i react-router-dom axios 
+```
+modify [index.js](./client/src/index.js)
+
+```html
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import './index.css';
+import App from './App';
+import reportWebVitals from './reportWebVitals';
+import {BrowserRouter} from "react-router-dom";  <!--TODO -->
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(
+<React.StrictMode>
+    <BrowserRouter> <!--TODO -->
+        <App />
+    </BrowserRouter> <!--TODO -->
+</React.StrictMode>
+);
+
+// If you want to start measuring performance in your app, pass a function
+// to log results (for example: reportWebVitals(console.log))
+// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
+reportWebVitals();
+
+```
+
+add [Main.jsx](./client/src/views/Main.jsx)
+
+```jsx
+import React, { useEffect, useState } from 'react'
+import AuthorForm from '../components/AuthorForm';
+import AuthorList from '../components/AuthorList';
+import axios from "axios";
+
+const Main = (props) => {
+    const [authors, setAuthors] = useState([]);
+    const [loaded, setLoaded] = useState(false);
+
+    useEffect(()=>{
+        axios.get('http://localhost:8000/api/authors')
+            .then(res=>{
+                setAuthors(res.data);
+                setLoaded(true);
+            })
+            .catch(err => console.error(err));
+    },[authors]);
+
+    return (
+        <div>
+            <AuthorForm/>
+            <hr/>
+            {loaded && <AuthorList authors={authors}/>}
+        </div>
+    )
+}
+
+export default Main;
+```
+
+add [AuthorForm.jsx](./client/src/components/AuthorForm.jsx)
+
+```jsx
+import {useState} from "react";
+import axios from "axios";
+
+
+const AuthorForm = () => {
+    //keep track of what is being typed via useState hook
+    // TODO modify state variables as appropriate
+    const [firstName, setFirstName] = useState("");
+    const [lastName, setLastName] = useState("");
+    //handler when the form is submitted
+    const onSubmitHandler = e => {
+        //prevent default behavior of submit
+        e.preventDefault();
+        //make a post request to create a new author
+        axios.post('http://localhost:8000/api/authors', {
+                firstName,
+                lastName
+            }
+        )
+            .then(res=>console.log(res))
+            .catch(err=>console.log(err))
+
+        setFirstName("");
+        setLastName("");
+    }
+    //onChange to update firstName and lastName
+    return (
+        <form onSubmit={onSubmitHandler}>
+            <p>
+                <label>First Name</label><br/>
+                <input type="text" onChange={(e)=>setFirstName(e.target.value)} value={firstName}/>
+            </p>
+            <p>
+                <label>Last Name</label><br/>
+                <input type="text" onChange={(e)=>setLastName(e.target.value)} value={lastName}/>
+            </p>
+            <input type="submit"/>
+        </form>
+    )
+}
+
+export default AuthorForm;
+```
+
+add [AuthorList.jsx](./client/src/components/AuthorList.jsx)
+
+```jsx
+import React from 'react';
+import axios from 'axios';
+import { Link } from 'react-router-dom';
+
+const AuthorList = (props) => {
+    const { removeFromDom } = props;
+
+    const deleteAuthor = (authorId) => {
+        axios.delete('http://localhost:8000/api/authors/' + authorId)
+            .then(res => {
+                removeFromDom(authorId)
+            })
+            .catch(err => console.error(err));
+    }
+
+    return (
+        <div>
+            {props.authors.map((author, idx) => {
+                return <p key={idx}>
+                    <Link to={"/people/" + author._id}>
+                        {author.lastName}, {author.firstName}
+                    </Link>
+                    |
+                    <button onClick={(e)=>{deleteAuthor(author._id)}}>
+                        Delete
+                    </button>
+                </p>
+            })}
+        </div>
+    )
+}
+
+export default AuthorList;
 
 ```
