@@ -12,7 +12,7 @@ module.exports.createAuthor = (req, res) => {
         name
     })
         .then(author => res.json(author))
-        .catch(err => res.json(err));
+        .catch(err => res.status(400).json(err));
 }
 // add in list and detail
 module.exports.getAllPeople = (req, res) => {
@@ -28,9 +28,9 @@ module.exports.getAuthor = (req, res) => {
 }
 
 module.exports.updateAuthor = (request, response) => {
-    Author.findOneAndUpdate({_id: request.params.id}, request.body, {new:true})
+    Author.findOneAndUpdate({_id: request.params.id}, request.body, {new:true, runValidators: true})
         .then(updatedAuthor => response.json(updatedAuthor))
-        .catch(err => response.json(err))
+        .catch(err => response.status(400).json(err))
 }
 
 module.exports.deleteAuthor = (request, response) => {

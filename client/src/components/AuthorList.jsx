@@ -18,11 +18,12 @@ const AuthorList = (props) => {
         <div>
             <table>
                 <thead>
+                <tr>
                 <th>Author</th>
                 <th>Actions Available</th>
+                </tr>
                 </thead>
                 <tbody>
-
             {props.authors.map((author, idx) => {
                 return <tr key={idx}>
                     <td>{author.name}</td>

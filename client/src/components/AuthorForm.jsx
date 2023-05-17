@@ -8,7 +8,8 @@ const AuthorForm = (props) => {
     console.log(props)
     //keep track of what is being typed via useState hook
     const [name, setName] = useState("");
-
+    //Create an array to store errors from the API
+    const [errors, setErrors] = useState([]);
     //handler when the form is submitted
     const onSubmitHandler = e => {
         //prevent default behavior of submit
@@ -19,9 +20,18 @@ const AuthorForm = (props) => {
             }
         )
             .then(res=>console.log(res))
-            .catch(err=>console.log(err))
+            .catch(err=> {
+                console.log(err)
+                const errorResponse = err.response.data.errors; // Get the errors from err.response.data
+                const errorArr = []; // Define a temp error array to push the messages in
+                for (const key of Object.keys(errorResponse)) { // Loop through all errors and get the messages
+                    errorArr.push(errorResponse[key].message)
+                }
+                // Set Errors
+                setErrors(errorArr);
+            })
 
-        setName("");
+        navigate("/")
     }
     //onChange to update firstName and lastName
     return (
@@ -29,6 +39,7 @@ const AuthorForm = (props) => {
 
             <Link to={"/"}>Home</Link>
         <form onSubmit={onSubmitHandler}>
+            {errors.map((err, index) => <p key={index}>{err}</p>)}
             <h3>Add an Author:</h3>
             <p>
                 <label>Name</label><br/>
